@@ -1,5 +1,5 @@
 -- 1 --GUIA*3--
-create table  cliente( -- ya
+create table  clientes( -- ya
 idCliente int  primary key auto_increment,
 nombreCliente  varchar(150) not null,
 apellidoCliente varchar(150) not null,
@@ -10,31 +10,31 @@ telefonoCliente  int not null,
 idDireccion int not null
 );
 -- 2 --
-create table direccion( -- ya estuvo--
-idDireccion int primary key,
-linea1 varchar(150) not null,
-linea2 varchar(150) not null,
-codigoPostal   int not null,
-idDistrito  int not null
+create table direcciones( -- ya estuvo--
+	idDireccion int primary key,
+	linea1 varchar(150) not null,
+	linea2 varchar(150) not null,
+	codigoPostal VARCHAR(7),
+    idDistrito CHAR(5) NOT NULL
 );
 
 -- 3 --
-create table   distrito(  -- ya
-idDistrito int primary key  auto_increment,
-distrito varchar(50) not null,
-idMunicipio int not null
+create table   distritos(  -- ya
+	idDistrito CHAR(5) PRIMARY KEY,
+    distrito VARCHAR(50) NOT NULL, 
+    idMunicipio CHAR(3) NOT NULL
 );
 -- 4 --
-create   table municipio( -- ya estuvo
-idMunicipio int  primary key auto_increment,
-Municipio varchar(50) not null,
-idDepartamento int  not null
+create   table municipios( -- ya estuvo
+	idMunicipio CHAR(3) PRIMARY KEY,
+    municipio CHAR(50) NOT NULL,
+    idDepartamento CHAR(2) NOT NULL
 );
 -- 5 -- 
-create table departamento(  -- ya --
-idDepartamento int primary key auto_increment,
-Departamento varchar (25)not null,
-pais varchar (25) not null
+create table departamentos(  -- ya --
+	idDepartamento CHAR(2) PRIMARY KEY,
+    departamento VARCHAR(25) NOT NULL,
+    pais VARCHAR(25) NOT NULL
 );
 -- 6 --
 create table cargos ( -- ya
@@ -44,7 +44,7 @@ descripcionCargos longtext not null
 
 );
 -- 7 --
-create  table empleado( -- ya
+create  table empleados( -- ya
 idEmpleado int primary key auto_increment,
 nombreEmpleado varchar(150) not null,
 apellidoEmpleado varchar (150) not null,
@@ -56,7 +56,7 @@ idCargos  int not null,
 idDireccion int not null
 );
 -- 8 --
-create table  venta( -- ya
+create table  ventas( -- ya
 idVenta int primary key auto_increment,
 FechaVenta  date not null,
 total decimal(10,0) not null,
@@ -65,7 +65,7 @@ idCliente int not null
 
 );
 -- 9 --
-create table distribuidor ( -- ya  
+create table distribuidores ( -- ya  
 idDistribuidor int primary key auto_increment,
 Distribuidor varchar(100) not null,
 descripcionDistribuidor longtext not null,
@@ -89,7 +89,7 @@ UnidadMedida varchar (30) not null
 );
 
 -- 12 --
-create table producto( -- ya --
+create table productos( -- ya --
 idProducto int primary key  auto_increment,
 Producto varchar (100) not null,
 descripcionProducto varchar (200) not null,
@@ -130,14 +130,14 @@ fechaEntrada date not null,
 fechaSalida date not null
 );
 -- 16 --
-create table categoria (  -- ya--
+create table categorias (  -- ya--
 idCategoria int  primary key auto_increment,
 Categoria varchar (50) not  null,
 descripcionCategoria longtext not null
 
 );
 -- 17 --
-create table marca( -- ya
+create table marcas( -- ya
 idMarca int primary key auto_increment,
 Marca varchar(50) not null,
 descripcionMarca longtext not null
@@ -195,38 +195,38 @@ create table usuarios (
 );
 
 -- LLAVES FORANEAS DE DIRECCIONES --
-ALTER TABLE municipio ADD  FOREIGN KEY (idDepartamento) REFERENCES departamento(idDepartamento);
-ALTER TABLE distrito ADD FOREIGN KEY (idMunicipio) REFERENCES municipio(idMunicipio);
-ALTER TABLE direccion ADD FOREIGN KEY ( idDistrito) REFERENCES distrito(idDistrito);
+ALTER TABLE municipios ADD  FOREIGN KEY (idDepartamento) REFERENCES departamentos(idDepartamento);
+ALTER TABLE distritos ADD FOREIGN KEY (idMunicipio) REFERENCES municipios(idMunicipio);
+ALTER TABLE direcciones ADD FOREIGN KEY ( idDistrito) REFERENCES distritos(idDistrito);
 --   llave foranea para empleado --
-ALTER TABLE empleado  ADD FOREIGN KEY (idCargos) REFERENCES cargos(idCargos); 
-ALTER TABLE empleado ADD FOREIGN KEY (idDireccion) REFERENCES direccion(idDireccion); 
+ALTER TABLE empleados  ADD FOREIGN KEY (idCargos) REFERENCES cargos(idCargos); 
+ALTER TABLE empleados ADD FOREIGN KEY (idDireccion) REFERENCES direcciones(idDireccion); 
  --  llave foranea para cliente --
-ALTER TABLE cliente ADD FOREIGN KEY (idDireccion) REFERENCES direccion(idDireccion);
+ALTER TABLE clientes ADD FOREIGN KEY (idDireccion) REFERENCES direcciones(idDireccion);
  -- llave foranea para venta --
-ALTER TABLE venta ADD FOREIGN KEY (idCliente) REFERENCES cliente (idCliente);-- ya --
+ALTER TABLE ventas ADD FOREIGN KEY (idCliente) REFERENCES clientes (idCliente);-- ya --
 
 
                            -- llave foranea para distribuidor --
-ALTER TABLE distribuidor ADD FOREIGN KEY (idDireccion) REFERENCES direccion(idDireccion);
+ALTER TABLE distribuidores ADD FOREIGN KEY (idDireccion) REFERENCES direcciones(idDireccion);
   -- llave foranea para producto --
-ALTER TABLE producto ADD FOREIGN KEY (idDistribuidor) REFERENCES distribuidor(idDistribuidor); -- f --
-ALTER TABLE producto ADD FOREIGN KEY (idUnidadMedida) REFERENCES unidadmedida (idUnidadMedida);
-ALTER TABLE producto ADD FOREIGN KEY (idBodega) REFERENCES bodega(idBodega); 
-ALTER TABLE producto ADD FOREIGN KEY (idCategoria) REFERENCES categoria (idCategoria);
-ALTER TABLE producto ADD FOREIGN KEY (idMarca) REFERENCES marca(idMarca);
+ALTER TABLE productos ADD FOREIGN KEY (idDistribuidor) REFERENCES distribuidores(idDistribuidor); -- f --
+ALTER TABLE productos ADD FOREIGN KEY (idUnidadMedida) REFERENCES unidadmedida (idUnidadMedida);
+ALTER TABLE productos ADD FOREIGN KEY (idBodega) REFERENCES bodega(idBodega); 
+ALTER TABLE productos ADD FOREIGN KEY (idCategoria) REFERENCES categorias(idCategoria);
+ALTER TABLE productos ADD FOREIGN KEY (idMarca) REFERENCES marcas(idMarca);
 -- llave foranea  para pedidos --
-ALTER TABLE pedidos ADD FOREIGN KEY (idEmpleado) REFERENCES empleado(idEmpleado); -- f --
-ALTER TABLE pedidos ADD FOREIGN KEY (idDistribuidor) REFERENCES distribuidor(idDistribuidor);
+ALTER TABLE pedidos ADD FOREIGN KEY (idEmpleado) REFERENCES empleados(idEmpleado); -- f --
+ALTER TABLE pedidos ADD FOREIGN KEY (idDistribuidor) REFERENCES distribuidores(idDistribuidor);
 -- llave foranea para detalleVenta --
-ALTER TABLE detalleVenta ADD FOREIGN KEY (idVenta) REFERENCES venta(idVenta); 
-ALTER TABLE detalleVenta ADD FOREIGN KEY (idProducto) REFERENCES producto(idProducto);
+ALTER TABLE detalleVenta ADD FOREIGN KEY (idVenta) REFERENCES ventas(idVenta); 
+ALTER TABLE detalleVenta ADD FOREIGN KEY (idProducto) REFERENCES productos(idProducto);
 -- llave foranea para  factura compra  ya--
 ALTER TABLE facturaCompra ADD FOREIGN KEY (idFormaPago) REFERENCES formaPago(idFormaPago);
 
 
            -- llaveforanea para detallepedido --
-ALTER TABLE detallePedido ADD FOREIGN KEY (idProducto) REFERENCES producto(idProducto);
+ALTER TABLE detallePedido ADD FOREIGN KEY (idProducto) REFERENCES productos(idProducto);
 ALTER TABLE detallePedido ADD FOREIGN KEY (idPedidos) REFERENCES pedidos(idPedidos); -- f --
 ALTER TABLE detallePedido ADD FOREIGN KEY (idFacturaCompra) REFERENCES facturaCompra (idFacturaCompra);
   -- llave foranea facturaventa ya --
